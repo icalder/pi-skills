@@ -13,8 +13,8 @@ if (process.argv[2] && process.argv[2] !== "--profile") {
 }
 
 const SCRAPING_DIR = `${process.env.HOME}/.cache/browser-tools`;
-// WSL UNC path that Windows Edge can access (e.g. \\wsl.localhost\NixOS\home\itcalde\.cache\browser-tools)
-const SCRAPING_DIR_WIN = `\\\\wsl.localhost\\NixOS${SCRAPING_DIR}`;
+// WSL UNC path that Windows Edge can access (e.g. \\wsl.localhost\DistroName\home\auser\.cache\browser-tools)
+const SCRAPING_DIR_WIN = `\\\\wsl.localhost\\${process.env.WSL_DISTRO_NAME}${SCRAPING_DIR}`;
 
 // Check if already running on :9222
 try {
