@@ -8,11 +8,13 @@ const useProfile = process.argv[2] === "--profile";
 if (process.argv[2] && process.argv[2] !== "--profile") {
 	console.log("Usage: browser-start.js [--profile]");
 	console.log("\nOptions:");
-	console.log("  --profile  Copy your default Chrome profile (cookies, logins)");
+	console.log("  --profile  Copy your default Edge profile (cookies, logins)");
 	process.exit(1);
 }
 
 const SCRAPING_DIR = `${process.env.HOME}/.cache/browser-tools`;
+// WSL UNC path that Windows Edge can access (e.g. \\wsl.localhost\NixOS\home\itcalde\.cache\browser-tools)
+const SCRAPING_DIR_WIN = `\\\\wsl.localhost\\NixOS${SCRAPING_DIR}`;
 
 // Check if already running on :9222
 try {
@@ -21,9 +23,9 @@ try {
 		defaultViewport: null,
 	});
 	await browser.disconnect();
-	console.log("✓ Chrome already running on :9222");
+	console.log("✓ Edge already running on :9222");
 	process.exit(0);
-} catch {}
+} catch { }
 
 // Setup profile directory
 execSync(`mkdir -p "${SCRAPING_DIR}"`, { stdio: "ignore" });
@@ -31,7 +33,7 @@ execSync(`mkdir -p "${SCRAPING_DIR}"`, { stdio: "ignore" });
 // Remove SingletonLock to allow new instance
 try {
 	execSync(`rm -f "${SCRAPING_DIR}/SingletonLock" "${SCRAPING_DIR}/SingletonSocket" "${SCRAPING_DIR}/SingletonCookie"`, { stdio: "ignore" });
-} catch {}
+} catch { }
 
 if (useProfile) {
 	console.log("Syncing profile...");
@@ -45,24 +47,27 @@ if (useProfile) {
 			--exclude='*/Current Tabs' \
 			--exclude='*/Last Session' \
 			--exclude='*/Last Tabs' \
-			"${process.env.HOME}/Library/Application Support/Google/Chrome/" "${SCRAPING_DIR}/"`,
+			"/mnt/c/Users/${process.env.USER}/AppData/Local/Microsoft/Edge/User Data/" "${SCRAPING_DIR}/"`,
 		{ stdio: "pipe" },
 	);
 }
 
-// Start Chrome with flags to force new instance
+console.log("Starting Edge...");
+// Start Edge with flags to force new instance
 spawn(
-	"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+	'/mnt/c/Program Files (x86)/Microsoft/Edge/Application/msedge.exe',
 	[
 		"--remote-debugging-port=9222",
-		`--user-data-dir=${SCRAPING_DIR}`,
+		`--user-data-dir=${SCRAPING_DIR_WIN}`,
 		"--no-first-run",
 		"--no-default-browser-check",
 	],
 	{ detached: true, stdio: "ignore" },
 ).unref();
 
-// Wait for Chrome to be ready
+console.log("Started Edge...");
+
+// Wait for Edge to be ready
 let connected = false;
 for (let i = 0; i < 30; i++) {
 	try {
@@ -79,8 +84,8 @@ for (let i = 0; i < 30; i++) {
 }
 
 if (!connected) {
-	console.error("✗ Failed to connect to Chrome");
+	console.error("✗ Failed to connect to Edge");
 	process.exit(1);
 }
 
-console.log(`✓ Chrome started on :9222${useProfile ? " with your profile" : ""}`);
+console.log(`✓ Edge started on :9222${useProfile ? " with your profile" : ""}`);
