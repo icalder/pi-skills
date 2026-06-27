@@ -12,9 +12,7 @@ if (process.argv[2] && process.argv[2] !== "--profile") {
 	process.exit(1);
 }
 
-const SCRAPING_DIR = `${process.env.HOME}/.cache/browser-tools`;
-// WSL UNC path that Windows Edge can access (e.g. \\wsl.localhost\DistroName\home\auser\.cache\browser-tools)
-const SCRAPING_DIR_WIN = `\\\\wsl.localhost\\${process.env.WSL_DISTRO_NAME}${SCRAPING_DIR}`;
+const SCRAPING_DIR = `C:\\Users\\iainc\\AppData\\Local\\Pi\\browser-profile`
 
 // Check if already running on :9222
 try {
@@ -58,7 +56,7 @@ spawn(
 	'/mnt/c/Program Files (x86)/Microsoft/Edge/Application/msedge.exe',
 	[
 		"--remote-debugging-port=9222",
-		`--user-data-dir=${SCRAPING_DIR_WIN}`,
+		`--user-data-dir=${SCRAPING_DIR}`,
 		"--no-first-run",
 		"--no-default-browser-check",
 	],
