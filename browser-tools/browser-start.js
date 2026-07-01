@@ -12,7 +12,8 @@ if (process.argv[2] && process.argv[2] !== "--profile") {
 	process.exit(1);
 }
 
-const SCRAPING_DIR = `C:\\Users\\iainc\\AppData\\Local\\Pi\\browser-profile`
+const WIN_USER = execSync('/mnt/c/Windows/System32/cmd.exe /c "echo %USERNAME%"', { encoding: "utf8" }).trim();
+const SCRAPING_DIR = `C:\\Users\\${WIN_USER}\\AppData\\Local\\Pi\\browser-profile`
 
 // Check if already running on :9222
 try {
@@ -45,7 +46,7 @@ if (useProfile) {
 			--exclude='*/Current Tabs' \
 			--exclude='*/Last Session' \
 			--exclude='*/Last Tabs' \
-			"/mnt/c/Users/${process.env.USER}/AppData/Local/Microsoft/Edge/User Data/" "${SCRAPING_DIR}/"`,
+			"/mnt/c/Users/${WIN_USER}/AppData/Local/Microsoft/Edge/User Data/" "${SCRAPING_DIR}/"`,
 		{ stdio: "pipe" },
 	);
 }
