@@ -13,7 +13,8 @@ if (process.argv[2] && process.argv[2] !== "--profile") {
 }
 
 const WIN_USER = execSync('/mnt/c/Windows/System32/cmd.exe /c "echo %USERNAME%"', { encoding: "utf8" }).trim();
-const SCRAPING_DIR = `C:\\Users\\${WIN_USER}\\AppData\\Local\\Pi\\browser-profile`
+const SCRAPING_DIR_WIN = `C:\\Users\\${WIN_USER}\\AppData\\Local\\Pi\\browser-profile`;
+const SCRAPING_DIR = `/mnt/c/Users/${WIN_USER}/AppData/Local/Pi/browser-profile`;
 
 // Check if already running on :9222
 try {
@@ -26,7 +27,7 @@ try {
 	process.exit(0);
 } catch { }
 
-// Setup profile directory
+// Setup profile directory (WSL path for rsync/Shell operations)
 execSync(`mkdir -p "${SCRAPING_DIR}"`, { stdio: "ignore" });
 
 // Remove SingletonLock to allow new instance
@@ -57,7 +58,7 @@ spawn(
 	'/mnt/c/Program Files (x86)/Microsoft/Edge/Application/msedge.exe',
 	[
 		"--remote-debugging-port=9222",
-		`--user-data-dir=${SCRAPING_DIR}`,
+		`--user-data-dir=${SCRAPING_DIR_WIN}`,
 		"--no-first-run",
 		"--no-default-browser-check",
 	],

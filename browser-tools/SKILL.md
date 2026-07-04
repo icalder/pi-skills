@@ -20,10 +20,9 @@ npm install
 
 ```bash
 {baseDir}/browser-start.js              # Fresh profile
-{baseDir}/browser-start.js --profile    # Copy user's profile (cookies, logins)
 ```
 
-Launch Edge with remote debugging on `:9222`. Use `--profile` to preserve user's authentication state.
+Launch Edge with remote debugging on `:9222`.
 
 ## Navigate
 
