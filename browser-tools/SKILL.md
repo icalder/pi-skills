@@ -20,9 +20,15 @@ npm install
 
 ```bash
 {baseDir}/browser-start.js              # Fresh profile
+{baseDir}/browser-start.js --profile    # Copy your Edge profile first
 ```
 
-Launch Edge with remote debugging on `:9222`.
+Launch Edge with remote debugging on `:9222`. It runs on the Windows side
+through WSL interop and works from any working directory (every Windows exec
+pins its cwd to `/tmp`, since interop rejects a cwd that only exists in a
+private mount namespace, as in the agent sandbox). Overrides: `WIN_USER`,
+`BROWSER_PROFILE_DIR` (skips profile discovery), `EDGE_EXE`, `WSL_CMD_EXE`,
+`WIN_USERS_DIR`, `BROWSER_TOOLS_DEBUG=1`.
 
 ## Navigate
 
